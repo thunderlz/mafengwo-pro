@@ -11,7 +11,9 @@ def validateTitle(title):
     rstr = r"[\/\\\:\*\?\"\<\>\|]"  # '/ \ : * ? " < > |'
     new_title = re.sub(rstr, "_", title)  # 替换为下划线
     return new_title
-path='/Volumes/My Passport/'
+# path='/Volumes/My Passport/'
+path='./'  #更改了爬虫爬下来的目的地的存储地址
+
 
 if not os.path.exists(path+'目的地/'):
     os.mkdir(path+'目的地')
@@ -40,7 +42,7 @@ while True:
                 time.sleep(1800)
                 continue
 
-            bs=BeautifulSoup(rq.text,'lxml')
+            bs=BeautifulSoup(rq.text,'html5lib') #windows server好像不支持lxml
             #创建目录
 
             # if not os.path.exists('./目的地/{}/'.format(p)):
@@ -55,7 +57,7 @@ while True:
                     link=a.attrs['href']
                     print(link)
                     rq=requests.get(link)
-                    bs=BeautifulSoup(rq.text,'lxml')
+                    bs=BeautifulSoup(rq.text,'html5lib') #windows server好像不支持lxml
                     title=validateTitle(bs.title.string)[0:30]
                     # 创建目录
                     # j = json.loads(bs.script.string[14:-2])
@@ -75,8 +77,11 @@ while True:
 
                     if not os.path.exists(path+'目的地/{}/{}/'.format(target,title)):
                         os.mkdir(path+'目的地/{}/{}/'.format(target,title))
-                        with open(path+'目的地/{}/{}/{}.html'.format(target,title,title), 'wt') as f:
-                            print(rq.text,file=f)
+                        with open(path+'目的地/{}/{}/{}.html'.format(target,title,title), 'wb') as f:
+
+                            #windows server对utf-8de支持和mac不一样，导致出现不变吗问题
+                            #print(rq.text,file=f)
+                            f.write(rq.content)
                             # print(bs.find_all('img'))
 
                         for img in bs.find_all('img'):
