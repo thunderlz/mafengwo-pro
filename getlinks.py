@@ -47,7 +47,7 @@ for mddkey in mdddic.keys():
         while True:
             #游记的链接
             yjlinks=[[mddkey,'http://www.mafengwo.cn'+a['href']] for a in bsobj.find('div',{'class':"_notelist"}).find_all('a',{'href':re.compile('/i/.*')})][::3]
-            print('yj:'+yjlinks[0][0])
+            print('yj:'+yjlinks[0][1])
             with open('yjlinks.csv','at') as f:
                 csvwriter=csv.writer(f)
                 csvwriter.writerows(yjlinks)
